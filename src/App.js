@@ -7,7 +7,8 @@ import Products from "./components/Products/Products";
 import ProductDetails from "./components/Products/ProductDetails";
 import Users from "./components/Users/Users";
 import UserDetails from "./components/Users/UserDetails";
-
+import Signup from "./components/Users/Signup";
+import Login from "./components/Users/Login";
 function App() {
     const [phone, setPhone] = useState('+996(997-997-908)')
 
@@ -19,6 +20,8 @@ function App() {
                     <Link to="/about">About us</Link> |&nbsp;&nbsp;
                     <Link to="/contacts">Contacts</Link> |&nbsp;
                     <Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Link to="/signup">Sign Up</Link>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Link to="/login">Login</Link>&nbsp;&nbsp;&nbsp;&nbsp;
                     <span>
                 phone: {phone}
                     </span>
@@ -31,6 +34,7 @@ function App() {
                 <Route path="/products/:id" element={<ProductDetails />}/>
                 <Route path="/users" element={<Users />}/>
                 <Route path="/users/:id" element={<UserDetails />}/>
+                <Route path="/login" element={<Login />}/>
             </Routes>
         </Router>
     );
