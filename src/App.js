@@ -1,43 +1,79 @@
 import './App.css';
 import {Link, BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import About from "./components/About/About";
-import Contacts from "./components/Contacts/Contacts";
+import About from "./pages/About/About";
+import Contacts from "./pages/Contacts/Contacts";
 import {useState} from "react";
-import Products from "./components/Products/Products";
-import ProductDetails from "./components/Products/ProductDetails";
-import Users from "./components/Users/Users";
-import UserDetails from "./components/Users/UserDetails";
-import Signup from "./components/Users/Signup";
-import Login from "./components/Users/Login";
-function App() {
+import Products from "./pages/Products/Products";
+import ProductDetails from "./pages/Products/ProductDetails";
+import Users from "./pages/Users/Users";
+import UserDetails from "./pages/Users/UserDetails";
+import Signup from "./pages/Users/Signup";
+import Login from "./pages/Users/Login";
+import Orders from "./pages/Orders/Orders";
+import LiveSearch from "./components/LiveSearch/LiveSearch";
+import {createStore} from "redux";
+import themeReducer from "./shopredux/reducer";
+import AppRouter from "./pages/AppRouter";
+import {connect} from "react-redux";
+import {changeCurrentTheme} from "./shopredux/actions";
+import {Provider} from "react-redux";
+
+let store = createStore(themeReducer)
+
+store.subscribe(() => console.log(store.getState()))
+
+
+function App({ currentTheme, changeCurrentTheme }) {
     const [phone, setPhone] = useState('+996(997-997-908)')
+    const [token, setToken] = useState('')
+    const [theme, setTheme] = useState("light")
+
+
+    const changeTheme = () => {
+        // const oldTheme = store.getState().value
+        // const newTheme = theme === 'light' ? 'dark' : 'light'
+
+        changeCurrentTheme(currentTheme)
+    }
 
     return (
         <Router>
-            <header>
-                <nav>
-                    <Link to="/">Home</Link> &nbsp;|&nbsp;&nbsp;
-                    <Link to="/about">About us</Link> |&nbsp;&nbsp;
-                    <Link to="/contacts">Contacts</Link> |&nbsp;
-                    <Link to="/users">Users</Link>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Link to="/signup">Sign Up</Link>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Link to="/login">Login</Link>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span>
-                phone: {phone}
-                    </span>
-                </nav>
-            </header>
-            <Routes>
-                <Route path="/about" element={<About/>}/>
-                <Route path="/contacts" element={<Contacts phoneNumber={phone}/>}/>
-                <Route path="/" element={<Products />}/>
-                <Route path="/products/:id" element={<ProductDetails />}/>
-                <Route path="/users" element={<Users />}/>
-                <Route path="/users/:id" element={<UserDetails />}/>
-                <Route path="/login" element={<Login />}/>
-            </Routes>
+            <div className={currentTheme}>
+                <header>
+
+                    <nav>
+                        <Link to="/">Home</Link> &nbsp;|&nbsp;&nbsp;
+                        <Link to="/about">About us</Link> |&nbsp;&nbsp;
+                        <Link to="/contacts">Contacts</Link> |&nbsp;
+                        <Link to="/users">Users</Link> |&nbsp;
+                        <Link to="/orders">Orders</Link>&nbsp;&nbsp;|&nbsp;
+                        <Link to="/search">Search</Link>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <Link to="/signup">Sign Up</Link>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <Link to="/login">Login</Link>&nbsp;&nbsp;&nbsp;&nbsp;
+                    </nav>
+                    <div>
+                        <span>phone: {phone}</span>
+                        <div onClick={changeTheme} className="change-theme">Change Theme</div>
+                    </div>
+                </header>
+
+                <section className="content">
+                    <AppRouter phone={phone} theme={theme} token={token} setToken={setToken}/>
+                </section>
+            </div>
         </Router>
     );
 }
 
-export default App;
+
+//mapStateToProps
+const readState = (state) => {
+    return {currentTheme: state.theme.currentTheme}
+}
+
+//mapDispatchToProps
+const themeDispatcher = {
+    changeCurrentTheme
+}
+
+export default connect(readState, themeDispatcher) (App);

@@ -15,6 +15,7 @@ const UserDetails = () => {
 
     useEffect(getName, [])
 
+
     return (
         <div>
             <div>{name.id}</div>
